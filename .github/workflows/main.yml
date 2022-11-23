@@ -52,12 +52,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo external job should be printed
-  build4:
+
+  internal-release:
+    if: contains(github.event.head_commit.message, 'internal-release')
     needs: build-app
     name: uploading apk file
     runs-on: ubuntu-latest
     steps:
-      - uses: 
-
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+            appId: ${{secrets.APP_ID}}
+            token: ${{secrets.TOKEN}}
+            groups: internal-group
+            file: build/app/outputs/apk/release/app-release.apk
+  external-release:
+    if: contains(github.event.head_commit.message, 'external-release')
+    needs: build-app
+    name: uploading apk file
+    runs-on: ubuntu-latest
+    steps:   
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+            appId: ${{secrets.APP_ID}}
+            token: ${{secrets.TOKEN}}
+            groups: external-group
+            file: build/app/outputs/apk/release/app-release.apk
 
   
