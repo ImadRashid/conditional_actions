@@ -28,6 +28,15 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/apk/release/app-release.apk
+    
+      - shell: bash
+        run: |
+          expr 3 + 7 > math-homework.txt
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: homework
+          path: math-homework.txt
   build2:
     needs: build-app
     name: upload to internal developers
@@ -43,4 +52,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo external job should be printed
+  build4:
+    needs: build-app
+    name: uploading apk file
+    runs-on: ubuntu-latest
+    steps:
+      - uses: 
+
+
   
