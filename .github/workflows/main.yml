@@ -4,6 +4,7 @@ on:
   push:
 
 jobs:
+#this job is used to build the app only when we use a release keyword
   build-app:
     name: Build Flutter App
     if: contains(github.event.head_commit.message, 'release')
@@ -37,22 +38,8 @@ jobs:
         with:
           name: homework
           path: math-homework.txt
-  build2:
-    needs: build-app
-    name: upload to internal developers
-    if: contains(github.event.head_commit.message, 'internal')
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo internal job should be printed
-      - run: echo 
-  build3:
-    needs: build-app
-    name: upload to external developers
-    if: contains(github.event.head_commit.message, 'external')
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo external job should be printed
 
+#this job is used to release to internal developers if we use internal-release keyword
   internal-release:
     if: contains(github.event.head_commit.message, 'internal-release')
     needs: build-app
@@ -66,6 +53,7 @@ jobs:
             token: ${{secrets.TOKEN}}
             groups: internal-group
             file: build/app/outputs/apk/release/app-release.apk
+#this job is used to release to external developers if we use external-release keyword
   external-release:
     if: contains(github.event.head_commit.message, 'external-release')
     needs: build-app
