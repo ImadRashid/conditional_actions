@@ -3,7 +3,6 @@ name: Flutter Build APK
 on:
   push:
 
-
 jobs:
   build:
     name: Build Flutter App
