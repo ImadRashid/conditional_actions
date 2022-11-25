@@ -37,17 +37,17 @@ jobs:
     name: uploading apk file
     runs-on: ubuntu-latest
     steps:
-      - name: Downloading Artifact
       - uses: actions/download-artifact@v2
         with:
           name: release-apk
-      - name: upload artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+
+      - uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
             appId: ${{secrets.APP_ID}}
             token: ${{secrets.TOKEN}}
             groups: internal-group
             file: build/app/outputs/flutter-apk/app-release.apk
+
 #this job is used to release to external developers if we use external-release keyword
   external-release:
     if: contains(github.event.head_commit.message, 'external-release')
