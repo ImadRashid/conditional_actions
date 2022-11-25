@@ -40,6 +40,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
 
       - uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -58,6 +59,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: release-apk   
+          path: build/app/outputs/flutter-apk/app-release.apk
 
       - uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
