@@ -29,15 +29,6 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-    
-      - shell: bash
-        run: |
-          expr 3 + 7 > math-homework.txt
-      - name: Upload math result for job 1
-        uses: actions/upload-artifact@v3
-        with:
-          name: homework
-          path: math-homework.txt
 
 #this job is used to release to internal developers if we use internal-release keyword
   internal-release:
@@ -46,6 +37,10 @@ jobs:
     name: uploading apk file
     runs-on: ubuntu-latest
     steps:
+      - name: Downloading Artifact
+      - uses: actions/download-artifact@v2
+        with:
+          name: release-apk
       - name: upload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -59,13 +54,25 @@ jobs:
     needs: build-app
     name: uploading apk file
     runs-on: ubuntu-latest
-    steps:   
-      - name: upload artifact to Firebase App Distribution
+    steps:
+      - name: Downloading Artifact
+      - uses: actions/download-artifact@v2
+        with:
+          name: release-apk   
+      - name: Upload artifact to Firebase App Distribution External Testers
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
             appId: ${{secrets.APP_ID}}
             token: ${{secrets.TOKEN}}
             groups: external-group
             file: build/app/outputs/apk/release/app-release.apk
+
+      - name: upload artifact to Firebase App Distribution Internal Testers
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+            appId: ${{secrets.APP_ID}}
+            token: ${{secrets.TOKEN}}
+            groups: internal-group
+            file: build/app/outputs/flutter-apk/app-release.apk
 
   
