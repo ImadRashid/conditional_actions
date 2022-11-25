@@ -25,10 +25,7 @@ jobs:
       - run: flutter build apk --release
       # - run: flutter build appbundle
     
-      - uses: actions/upload-artifact@v2
-        with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+
       # - if: contains(github.event.head_commit.message, 'release')
       #   run: echo "release keyword found"
       # - if: contains(github.event.head_commit.message, 'internal-release')
@@ -39,7 +36,7 @@ jobs:
             groups: internal-group
             file: build/app/outputs/flutter-apk/app-release.apk
       - if: contains(github.event.head_commit.message, 'external-release')
-      - uses: wzieba/Firebase-Distribution-Github-Action@v1
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
             appId: ${{secrets.APP_ID}}
             token: ${{secrets.TOKEN}}
