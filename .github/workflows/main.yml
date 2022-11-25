@@ -33,15 +33,15 @@ jobs:
         with:
             appId: ${{secrets.APP_ID}}
             token: ${{secrets.TOKEN}}
-            groups: internal-group
+            groups: internal-group, external-group
             file: build/app/outputs/flutter-apk/app-release.apk
-      - if: contains(github.event.head_commit.message, 'external-release')
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-            appId: ${{secrets.APP_ID}}
-            token: ${{secrets.TOKEN}}
-            groups: external-group
-            file: build/app/outputs/flutter-apk/app-release.apk
+      # - if: contains(github.event.head_commit.message, 'external-release')
+      #   uses: wzieba/Firebase-Distribution-Github-Action@v1
+      #   with:
+      #       appId: ${{secrets.APP_ID}}
+      #       token: ${{secrets.TOKEN}}
+      #       groups: external-group
+      #       file: build/app/outputs/flutter-apk/app-release.apk
 ## This will upload the generated artifacts so we may be able to download them
 ## 
       - uses: actions/upload-artifact@v2
