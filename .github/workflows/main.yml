@@ -31,7 +31,7 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
       # - if: contains(github.event.head_commit.message, 'release')
       #   run: echo "release keyword found"
-      - if: contains(github.event.head_commit.message, ['internal-release', 'external-release'])
+      # - if: contains(github.event.head_commit.message, 'internal-release')
       - uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
             appId: ${{secrets.APP_ID}}
@@ -39,46 +39,25 @@ jobs:
             groups: internal-group
             file: build/app/outputs/flutter-apk/app-release.apk
       - if: contains(github.event.head_commit.message, 'external-release')
-        run: echo "external-release keyword found"
-
-# #this job is used to release to internal developers if we use internal-release keyword
-  internal-release:
-    if: contains(github.event.head_commit.message, 'internal-release')
-    needs: build-app
-    name: uploading apk file
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
-
       - uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
             appId: ${{secrets.APP_ID}}
             token: ${{secrets.TOKEN}}
-            groups: internal-group
+            groups: external-group
             file: build/app/outputs/flutter-apk/app-release.apk
 
-# #this job is used to release to external developers if we use external-release keyword
-#   external-release:
-#     if: contains(github.event.head_commit.message, 'external-release')
+
+# #this job is used to release to internal developers if we use internal-release keyword
+#   internal-release:
+#     if: contains(github.event.head_commit.message, 'internal-release')
 #     needs: build-app
 #     name: uploading apk file
 #     runs-on: ubuntu-latest
 #     steps:
 #       - uses: actions/download-artifact@v2
 #         with:
-#           name: release-apk   
+#           name: release-apk
 #           path: build/app/outputs/flutter-apk/app-release.apk
-
-#       - uses: wzieba/Firebase-Distribution-Github-Action@v1
-#         with:
-#             appId: ${{secrets.APP_ID}}
-#             token: ${{secrets.TOKEN}}
-#             groups: external-group
-#             file: build/app/outputs/apk/release/app-release.apk
-
 
 #       - uses: wzieba/Firebase-Distribution-Github-Action@v1
 #         with:
@@ -86,5 +65,32 @@ jobs:
 #             token: ${{secrets.TOKEN}}
 #             groups: internal-group
 #             file: build/app/outputs/flutter-apk/app-release.apk
+
+# # #this job is used to release to external developers if we use external-release keyword
+# #   external-release:
+# #     if: contains(github.event.head_commit.message, 'external-release')
+# #     needs: build-app
+# #     name: uploading apk file
+# #     runs-on: ubuntu-latest
+# #     steps:
+# #       - uses: actions/download-artifact@v2
+# #         with:
+# #           name: release-apk   
+# #           path: build/app/outputs/flutter-apk/app-release.apk
+
+# #       - uses: wzieba/Firebase-Distribution-Github-Action@v1
+# #         with:
+# #             appId: ${{secrets.APP_ID}}
+# #             token: ${{secrets.TOKEN}}
+# #             groups: external-group
+# #             file: build/app/outputs/apk/release/app-release.apk
+
+
+# #       - uses: wzieba/Firebase-Distribution-Github-Action@v1
+# #         with:
+# #             appId: ${{secrets.APP_ID}}
+# #             token: ${{secrets.TOKEN}}
+# #             groups: internal-group
+# #             file: build/app/outputs/flutter-apk/app-release.apk
 
   
