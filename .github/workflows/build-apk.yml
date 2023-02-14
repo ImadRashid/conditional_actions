@@ -1,0 +1,79 @@
+##
+## Name of the CI/CD Pipeline displayed while execution
+##
+name: Build APK(unsigned), Upload Artifact & Release Publicly on firebase
+
+##
+## This is the trigger which will initiate our workflow
+##
+
+
+## We are initializing workflow whenever we push new code to any branch that contains:
+## "v" e.g. v1.0.0, v0.0.1, etc.
+on:
+  push:
+    branches:
+      - 'main'
+      # - 'v*'
+
+## Adding a button to trigger workflow manually
+  workflow_dispatch:
+
+
+##
+## This is a job in our workflow, the name of job is "build-deploy"
+jobs:
+  build-deploy:
+
+## This is the OS on which we would like to run our job, we can choose windows, macOS or Linux
+    runs-on: ubuntu-latest
+    steps:
+## In this step,
+## The Github Repo in which this .yaml file resides is cloned
+      - uses: actions/checkout@v3
+## Setting up JAVA Environment
+      - uses: actions/setup-java@v2
+        with:
+          distribution: "zulu"
+          java-version: "12.x"
+## Setting up the flutter environment
+## 
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.7.0"
+          channel: "stable"
+## This step is used add google-services.json, firebase_options.dart files to our project, 
+## remember we cannot push these files into repo for security reasons,
+## We are fetching each file fom Github Secrets and then including in project at time of execution
+##
+      - name: Decode google-services.json
+        env: 
+            GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+      - name: Decode firebase_option
+        env:
+          firebase_options_dart: ${{secrets.FIREBASE_OPTION}}
+        run: echo "$firebase_options_dart" > lib/firebase_options.dart
+## Fetching flutter dependencies and building a release apk file
+##
+      - run: flutter pub get
+      - run: flutter build apk
+##
+## We are uploading the generated artifact so it is accessible to us anytime when we comeback to a specific Action which was run
+## This step is important because if in future we need to see a past version of app, we won't need to revert code and re-compile again
+##
+##
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-apk
+          path: build/app/outputs/apk/release/app-release.apk
+
+##  Upload to Firebase, via 
+##
+      - uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          # serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: public #
+          file: build/app/outputs/flutter-apk/app-release.apk
