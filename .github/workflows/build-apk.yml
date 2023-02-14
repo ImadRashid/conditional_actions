@@ -1,20 +1,14 @@
+## Name of the CI/CD Pipeline
 ##
-## Name of the CI/CD Pipeline displayed while execution
-##
-name: Build APK(unsigned), Upload Artifact & Release Publicly on firebase
+name: Build APK(unsigned), Upload Artifact & Upload on firebase
 
 ##
 ## This is the trigger which will initiate our workflow
 ##
 
 
-## We are initializing workflow whenever we push new code to any branch that contains:
-## "v" e.g. v1.0.0, v0.0.1, etc.
-on:
-  push:
-    branches:
-      - 'main'
-      # - 'v*'
+## We are initializing workflow whenever we push new code to any branch on repo
+on: [push]
 
 ## Adding a button to trigger workflow manually
   workflow_dispatch:
@@ -73,7 +67,6 @@ jobs:
       - uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.APP_ID}}
-          token: ${{secrets.FIREBASE_TOKEN}}
+          token: ${{secrets.FIREBASE_TOKEN}} #deprecated method, use service account
           # serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          groups: public #
           file: build/app/outputs/flutter-apk/app-release.apk

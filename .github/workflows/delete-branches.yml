@@ -18,7 +18,7 @@ jobs:
         id: delete_stuff
         with:
           github_token: ${{ github.token }}
-          last_commit_age_days: 7
+          last_commit_age_days: 21
           ignore_branches: v*,main
           github_base_url: https://github.mycompany.com/api/v3
 
