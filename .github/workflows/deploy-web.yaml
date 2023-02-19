@@ -3,9 +3,7 @@ on:
   push:
     branches:
       - main
-  # pull_request:
-  #   branches:
-  #     - main
+
 jobs:
   build_web:
     name: Build Flutter (Web)
@@ -16,7 +14,7 @@ jobs:
       with:
           channel: 'stable'
     - run: flutter pub get
-    - run: flutter config --enable-web
+    - run: flutter config --enable-web ## not needed in case of new flutter
     - run: flutter build web
 
     - name: 📂 Deploy to name-cheap
