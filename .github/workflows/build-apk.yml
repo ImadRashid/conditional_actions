@@ -52,12 +52,13 @@ jobs:
 ##
       - run: flutter pub get
       - run: flutter build apk
-##
-## We are uploading the generated artifact so it is accessible to us anytime when we comeback to a specific Action which was run
-## This step is important because if in future we need to see a past version of app, we won't need to revert code and re-compile again
-##
-##
-      - uses: actions/upload-artifact@v2
+
+## Uploading the generated apk (we call it artifact in github terms) so it is accessible anytime when we comeback 
+## Artifacts can be anything that we want to save/persists for future use after our workflow/job has finished
+## Github by default saves log files as artifcats too
+## Artifacts are auto-deleted after 90 days in free/normal GitHub plans, This timeframe can be increase with paid subscriptions
+
+      - uses: actions/upload-artifact@v2  
         with:
           name: release-apk
           path: build/app/outputs/apk/release/app-release.apk

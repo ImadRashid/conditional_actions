@@ -1,23 +1,27 @@
 ## Name of the CI/CD Pipeline displayed while execution
-name: CI CD Pipeline for Distribution to Developers & Internal Team/Testers
+name: Developers & Internal Team/Testers (Firebase Distribution)
 
 ## This is the trigger which will initiate our workflow
 
 
-## We are initializing workflow whenever we push new code to any feature branch that contains:
-## "v" e.g. v1.0.0, v0.0.1, etc.
+## We want to initialize/run workflow whenever we push new code to any version branch 
+## Our company's internal convention is to prefix each version branch with a lowerCase v such as:
+## v0.0.1, v0.0.2
+## main branch is always protected and no one commit directly or merge a PR without 2 approvals
 on:
   push:
     branches:
       - 'v*'
-  workflow_dispatch:
+  workflow_dispatch: ## This will a manual button which can trigger workflow incase needed
 
-## These are the environment variable we need for application signing,
-## Environment Variables should not be exposed hence they are saved as github Secrets
-env:
-  KEY_JKS: ${{ secrets.KEY_JKS }}
-  KEY_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
-  ALIAS_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+# # These are the environment variable we need for application signing,
+# # Environment Variables should not be exposed hence they are saved as github Secrets
+# # If you prefer you can fetch env variables at top of workflow like this or fetch these variables directly at time of need
+# env:
+#   KEY_JKS: ${{ secrets.KEY_JKS }}
+#   KEY_PASSWORD: ${{ secrets.ALIAS_PASSWORD }}
+#   ALIAS_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
 ## This is a job in our workflow, the name of job is "build-deploy"
 jobs:
@@ -34,7 +38,7 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: "zulu"
-          java-version: "12.x" ## Use any JAVA version
+          java-version: "12.x" ## Use any JAVA 12 version
 
 ## Adding google-services.json, firebase_options.dart files to our project, 
 ## Only needed if you have firebase integrated, incase of AWS etc Env variables can be considered its alternate
@@ -51,7 +55,6 @@ jobs:
 
 ## Adding Keystore file via Github Secrets
 ## We cannot add keystores in GitHub repos for security concerns
-
 # Decoding base64 key into a file
       - name: Decode Base64 key
         run: echo "${{ secrets.KEYSTORE2 }}" | base64 --decode > android/upload-keystore.jks
