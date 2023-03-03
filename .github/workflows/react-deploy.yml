@@ -1,4 +1,4 @@
-name: Github Page Deploy Workflow
+name: React App Deployment Pipeline
 
 on:
   push:
